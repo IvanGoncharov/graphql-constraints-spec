@@ -15,9 +15,9 @@ All the examples bellow will be based on [GraphQL IDL](https://github.com/facebo
 
 ## Notation
 
-- ** Constraints Directive ** - is a group of related constraint represented as a GraphQL directive
-- ** Constraint ** - Atomic assertion which is represented as arguments and input values of Constraints Directive
-- ** Instance ** - actual **non-null** value of argument, field, input field that is interpreted by the directive.
+- **Constraints Directive** - is a group of related constraint represented as a GraphQL directive
+- **Constraint** - Atomic assertion which is represented as arguments and input values of Constraints Directive
+- **Instance** - actual **non-null** value of argument, field, input field that is interpreted by the directive.
 
 **NOTE**: null values are handled by GraphQL natively. All the constraints don't affect nullability.
 
