@@ -94,7 +94,7 @@ The value of `exclusiveMaximum` MUST be a number, representing an exclusive uppe
 ##### exclusiveMinimum
 The value of `exclusiveMinimum` MUST be a number, representing an exclusive upper limit for a numeric instance. A numeric instance is valid only if it has a value strictly greater than (not equal to) `exclusiveMinimum`.
 
-##### enum
+##### oneOf
 The value of this argument MUST be an array. This array SHOULD have at least one element. Elements in the array SHOULD be unique.
 An instance is valid only if its value is equal to one of the elements in this constraint's array value.
 
@@ -117,7 +117,7 @@ type Foo {
 ```graphql
 type Foo {
   bitMask: Integer @numberValue(
-    enum: [ 1, 2, 4, 8, 16, 32, 64, 128 ]
+    oneOf: [ 1, 2, 4, 8, 16, 32, 64, 128 ]
   )
 }
 ```
@@ -159,8 +159,8 @@ An instance is valid if constraint's value may be found within instance string.
 The value of this contraint MUST be a string. This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.
 An instance is valid if the regular expression matches the instance successfully. Recall: regular expressions are not implicitly anchored.
 
-##### enum
-The same as for [enum for @numberValue](#numbervalue)
+##### oneOf
+The same as for [oneOf for @numberValue](#numbervalue)
 
 ##### const
 The same as for [const for @numberValue](#numbervalue)
@@ -262,7 +262,7 @@ type ticTacToe {
       minItems: 3,
       maxItems: 3
     }
-  ) @stringValue(enum: [" ","X", "O"])
+  ) @stringValue(oneOf: [" ","X", "O"])
 }
 ```
 
