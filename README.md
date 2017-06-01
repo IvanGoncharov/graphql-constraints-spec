@@ -143,6 +143,18 @@ The value of this constraint MUST be a non-negative integer.
 A string instance is valid against this constraint if its length is greater than, or equal to `minLength`.
 The length of a string instance is defined as the number of its characters.
 
+##### startsWith
+The value of this contraint MUST be a string.
+An instance is valid if it begins with the characters of a constraint's string.
+
+##### endsWith
+The value of this contraint MUST be a string.
+An instance is valid if it ends with the characters of a constraint's string.
+
+##### includes
+The value of this contraint MUST be a string.
+An instance is valid if constraint's value may be found within instance string.
+
 ##### pattern
 The value of this contraint MUST be a string. This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.
 An instance is valid if the regular expression matches the instance successfully. Recall: regular expressions are not implicitly anchored.
