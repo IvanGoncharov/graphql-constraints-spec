@@ -8,21 +8,21 @@ It is inspired by [JSON Schema](http://json-schema.org/latest/json-schema-valida
 **Note: Reference implementation is coming**
 
 ## Notes for readers
-The issues list for this draft can be found at https://github.com/apis-guru/graphql-contraints/issues
+The issues list for this draft can be found at https://github.com/apis-guru/graphql-constraints-spec/issues
 To provide feedback, use this issue tracker, or email the document editors.
 
-All the examples bellow will be based on [GraphQL IDL](https://github.com/facebook/graphql/pull/90).
+All the examples below will be based on [GraphQL IDL](https://github.com/facebook/graphql/pull/90).
 
 ## Notation
 
-- **Constraints Directive** - is a group of related constraint represented as a GraphQL directive
+- **Constraints Directive** - is a group of related constraints represented as a GraphQL directive
 - **Constraint** - Atomic assertion which is represented as arguments and input values of Constraints Directive
 - **Instance** - actual **non-null** value of argument, field, input field that is interpreted by the directive.
 
 **NOTE**: null values are handled by GraphQL natively. All the constraints don't affect nullability.
 
 ## Multiple constraints
-When Constraint Directive has more than one constraint in it, they should be treated as logical AND between individual constraints.
+When a Constraint Directive has more than one constraint in it, they should be treated as logical AND between individual constraints.
 
 ## Kinds of Constraints Directives
 
@@ -47,7 +47,7 @@ Type Constraints Directives can be applied to the following GraphQL entities:
 If Type Constraint is applied to an entity of `List` wrapper type it describes innermost values of the lists.
 
 ### Multiple Type Constraints Directives
-Applying more than one Type Constraints Directives is allowed only for Scalar Definitions. Doing that for other entities should result in error.  If there are more than one Type Constraints Directive applied to one entity they should be treated as a logical OR operator between each directive. For example:
+Applying more than one Type Constraints Directives is allowed only for Scalar Definitions. Doing that for other entities should result in an error.  If there are more than one Type Constraints Directive applied to one entity they should be treated as a logical OR operator between each directive. For example:
 
 ```graphql
 scalar IntOrFalse @numberValue(multipleOf: 1) @booleanValue(const: false)
@@ -65,7 +65,7 @@ Type Constraints Directives do not override GraphQL standard scalars semantic an
 | @booleanValue | -     | -   | +       | -      | -  | +                   |
 
 
-Applying directive to field definition, argument definition or input field definition of incompatible standard type should result in error.
+Applying a directive to a field definition, an argument definition or an input field definition of an incompatible standard type should result in an error.
 
 ### @numberValue
 
@@ -75,38 +75,36 @@ Applying directive to field definition, argument definition or input field defin
 
 Instance is valid if it is a numeric value according to the Serialization Format (e.g. JSON)
 
-#### Contraints
+#### Constraints
 
 ##### multipleOf
 The value of `multipleOf` MUST be a number, strictly greater than `0`. A numeric instance is valid only if division by this constraint's value results in an integer.
 
-##### maximum
-The value of `maximum` MUST be a number, representing an inclusive upper limit for a numeric instance.  A numeric instance is valid only if the instance is less than or exactly equal to `maximum`.
+##### max
+The value of `max` MUST be a number, representing an inclusive upper limit for a numeric instance.  A numeric instance is valid only if the instance is less than or exactly equal to `max`.
 
-##### minimum
-The value of `minimum` MUST be a number, representing an inclusive upper limit for a numeric instance.
- A numeric instance is valid only if the instance is greater than or exactly equal to `minimum`.
+##### min
+The value of `min` MUST be a number, representing an inclusive upper limit for a numeric instance. A numeric instance is valid only if the instance is greater than or exactly equal to `min`.
 
-##### exclusiveMaximum
-The value of `exclusiveMaximum` MUST be a number, representing an exclusive upper limit for a numeric instance.
- A numeric instance is valid only if it is strictly less than (not equal to) `exclusiveMaximum`.
+##### exclusiveMax
+The value of `exclusiveMax` MUST be a number, representing an exclusive upper limit for a numeric instance. A numeric instance is valid only if it is strictly less than (not equal to) `exclusiveMax`.
 
-##### exclusiveMinimum
-The value of `exclusiveMinimum` MUST be a number, representing an exclusive upper limit for a numeric instance. A numeric instance is valid only if it has a value strictly greater than (not equal to) `exclusiveMinimum`.
+##### exclusiveMin
+The value of `exclusiveMin` MUST be a number, representing an exclusive upper limit for a numeric instance. A numeric instance is valid only if it has a value strictly greater than (not equal to) `exclusiveMin`.
 
 ##### oneOf
 The value of this argument MUST be an array. This array SHOULD have at least one element. Elements in the array SHOULD be unique.
 An instance is valid only if its value is equal to one of the elements in this constraint's array value.
 
-##### const
+##### equals
 A numeric instance is valid only if its value is equal to the value of the constrain.
 
 #### Examples
 ```graphql
 type Foo {
   byte:Integer @numberValue(
-    minimum: 0
-    maximum: 255
+    min: 0
+    max: 255
   )
 }
 ```
@@ -131,45 +129,39 @@ type Foo {
 `@stringValue` directive is used to describe possible string values.
 Instance is valid if it is a string value according to the Serialization Format (e.g. JSON)
 
-#### Contraints
+#### Constraints
 
 ##### maxLength
 The value of this constraint MUST be a non-negative integer.
-A string instance is valid against this constraint if its length is less than, or equal to `maxLength`.
-The length of a string instance is defined as the number of its characters.
+A string instance is valid against this constraint if its length is less than, or equal to `maxLength`. The length of a string instance is defined as the number of its characters.
 
 ##### minLength
 The value of this constraint MUST be a non-negative integer.
-A string instance is valid against this constraint if its length is greater than, or equal to `minLength`.
-The length of a string instance is defined as the number of its characters.
+A string instance is valid against this constraint if its length is greater than, or equal to `minLength`. The length of a string instance is defined as the number of its characters.
 
 ##### startsWith
-The value of this contraint MUST be a string.
-An instance is valid if it begins with the characters of a constraint's string.
+The value of this constraint MUST be a string. An instance is valid if it begins with the characters of the constraint's string.
 
 ##### endsWith
-The value of this contraint MUST be a string.
-An instance is valid if it ends with the characters of a constraint's string.
+The value of this constraint MUST be a string. An instance is valid if it ends with the characters of the constraint's string.
 
 ##### includes
-The value of this contraint MUST be a string.
-An instance is valid if constraint's value may be found within instance string.
+The value of this constraint MUST be a string. An instance is valid if constraint's value may be found within the instance string.
 
-##### pattern
-The value of this contraint MUST be a string. This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.
-An instance is valid if the regular expression matches the instance successfully. Recall: regular expressions are not implicitly anchored.
+##### regex
+The value of this constraint MUST be a string. This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect. An instance is valid if the regular expression matches the instance successfully. Recall: regular expressions are not implicitly anchored.
 
 ##### oneOf
 The same as for [oneOf for @numberValue](#numbervalue)
 
-##### const
-The same as for [const for @numberValue](#numbervalue)
+##### equals
+The same as for [equals for @numberValue](#numbervalue)
 
 #### Examples
 
 ```graphql
 scalar AlphaNumeric @stringValue(
-  pattern: "^[0-9a-zA-Z]*$"
+  regex: "^[0-9a-zA-Z]*$"
 )
 ```
 *Examples of valid values*: `"foo1"`, `"Apollo13"`, `123test`
@@ -178,13 +170,14 @@ scalar AlphaNumeric @stringValue(
 
 
 ### @booleanValue
+
 `@booleanValue` directive is used to describe possible boolean values.
 Instance is valid if it is a boolean value according to the Serialization Format (e.g. JSON)
 
-#### Constrains
+#### Constraints
 
-##### const
-Same as for [const for @numberValue](#numbervalue)
+##### equals
+Same as for [equals for @numberValue](#numbervalue)
 
 ## Wrapper Constraints Directives
 
@@ -196,21 +189,19 @@ Wrapper Constraints Directives can be applied to the following GraphQL entities:
 - Object Field Arguments Definition
 - Directive Argument Definition
 
-**NOTE**: Wrapper Constrain Directives can't be applied to Scalar Definitions
+**NOTE**: Wrapper Constraints Directives can't be applied to Scalar Definitions
 
 Wrapper Constraints Directives do not override GraphQL standard wrappers semantics and runtime behavior. Moreover, each Wrapper Constraints Directive is compatible only with specific GraphQL wrapper.
 
-Applying directive to field definition, argument definition or input field definition without matching wrapper type should result in error.
+Applying a directive to a field definition, an argument definition or an input field definition without matching a wrapper type should result in an error.
 
 ### @list
-`@list` directive is used to describe list values.
-Instance is valid if it is a list according to the Serialization Format (e.g. JSON)
+`@list` directive is used to describe list values. Instance is valid if it is a list according to the Serialization Format (e.g. JSON)
 
-#### Contstrains
+#### Constraints
 
 ##### maxItems
-The value of this constraint MUST be a non-negative integer.
-An instance is valid if only its size is less than, or equal to, the value of this directive.
+The value of this constraint MUST be a non-negative integer. An instance is valid if only its size is less than, or equal to, the value of this directive.
 
 ##### minItems
 The value of this constraint MUST be a non-negative integer.
@@ -218,7 +209,7 @@ An instance is valid against `minItems` if its size is greater than, or equal to
 Omitting this constraint has the same behavior as a value of 0.
 
 ##### uniqueItems
-The value of this constraint MUST be a boolean. 
+The value of this constraint MUST be a boolean.
 If it has boolean value `true`, the instance is valid if all of its elements are unique.
 
 ##### innerList
@@ -245,7 +236,7 @@ type Foo {
   pointOnScreen: [Float] @list(
     maxItems: 2,
     minItems: 2
-  ) @numberValue(minimum: 0.0)
+  ) @numberValue(min: 0.0)
 }
 ```
 
@@ -266,7 +257,7 @@ type ticTacToe {
 }
 ```
 
-*Examples of valid value for `board` field*: 
+*Examples of valid value for `board` field*:
 ``` json
 [
   [" ", " ", " "],
@@ -290,14 +281,14 @@ type ticTacToe {
 Some ideas:
 
 **Variant1**:
-Allows to provide single error for multiple constraints but not intuitive structure
+Allows to provide a single error for multiple constraints but not intuitive structure
 ```
 age: Float @numberValue(
-  minimum: 0,
-  maximum: 100,
+  min: 0,
+  max: 100,
   errors: [{
-    constraints: [minimum, maximum]
-    message: "Invalid age ${value}, should be between ${minimum} and ${maximum} years"
+    constraints: [min, max]
+    message: "Invalid age ${value}, should be between ${min} and ${max} years"
     code: "AGE_OUT_OF_RANGE"
   }]
 )
@@ -307,15 +298,15 @@ age: Float @numberValue(
 Simpler in terms of DX but some messages duplication
 ```
 age: Integer @numberValue(
-  minimum: 0,
-  maximum: 100,
+  min: 0,
+  max: 100,
   errors: {
-    minimum: {
-      message: Invalid age ${value}, should be greater than ${minimum} years",
+    min: {
+      message: Invalid age ${value}, should be greater than ${min} years",
       code: "AGE_LT_MINIMUM"
     },
-    maximum: {
-      message: "Invalid age ${value}, should be between less than {maximum} years",
+    max: {
+      message: "Invalid age ${value}, should be between less than {max} years",
       code: "AGE_GT_MAXIMUM"
     }
   }
@@ -325,7 +316,7 @@ age: Integer @numberValue(
 ## Appendix A: Some Examples
 
 ```graphql
-scalar IntOrFalse @numberValue(multipleOf: 1) @booleanValue(const: false)
+scalar IntOrFalse @numberValue(multipleOf: 1) @booleanValue(equals: false)
 ```
 
 *Examples of valid values*: `2`, `50`, `false`
@@ -360,9 +351,9 @@ type Foo {
 ```
 type Query {
  allPersons(
-   first: Integer @numberValue(minimum: 1, maximum: 25)
+   first: Integer @numberValue(min: 1, max: 25)
    after: String
-   last: Integer @numberValue(minimum: 1, maximum: 25)
+   last: Integer @numberValue(min: 1, max: 25)
    before: String
  ): [Foo!]
 }
