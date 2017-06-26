@@ -24,6 +24,9 @@ All the examples below will be based on [GraphQL IDL](https://github.com/faceboo
 ## Multiple constraints
 When a Constraint Directive has more than one constraint in it, they should be treated as logical AND between individual constraints.
 
+## Applicability
+**TBD**
+
 ## Kinds of Constraints Directives
 
 In GraphQL there are types (`String`, `Int`, `Float`, `ID`, `Boolean` and various user-defined types) and type wrappers (`List` and `Not-Null`).
@@ -44,25 +47,18 @@ Type Constraints Directives can be applied to the following GraphQL entities:
 - Directive Argument Definition
 - Scalar Definition
 
+Note: Only one Type Constraint per entity is allowed.
+
 If Type Constraint is applied to an entity of `List` wrapper type it describes innermost values of the lists.
-
-### Multiple Type Constraints Directives
-Applying more than one Type Constraints Directives is allowed only for Scalar Definitions. Doing that for other entities should result in an error.  If there are more than one Type Constraints Directive applied to one entity they should be treated as a logical OR operator between each directive. For example:
-
-```graphql
-scalar IntOrFalse @numberValue(multipleOf: 1) @booleanValue(const: false)
-scalar FloatOrBoolean @numberValue @booleanValue
-```
 
 ### Relation to GraphQL scalars
 
 Type Constraints Directives do not override GraphQL standard scalars semantic and runtime behavior. Moreover, each Type Constraints Directive is compatible only with specific standard scalars
 
-|Directive\Type | Float | Int | Boolean | String | ID | Non-standard scalar |
-| ------------- | ----- | --- | ------- | ------ | -- | ------------------- |
-| @numberValue  | +     | +   | -       | -      | +  | +                   |
-| @stringValue  | -     | -   | -       | +      | +  | +                   |
-| @booleanValue | -     | -   | +       | -      | -  | +                   |
+|Directive\Type | Float | Int | Boolean | String | ID |
+| ------------- | ----- | --- | ------- | ------ | -- |
+| @numberValue  | +     | +   | -       | -      | -  |
+| @stringValue  | -     | -   | -       | +      | +  |
 
 
 Applying a directive to a field definition, an argument definition or an input field definition of an incompatible standard type should result in an error.
@@ -70,9 +66,6 @@ Applying a directive to a field definition, an argument definition or an input f
 ### @numberValue
 
 `@numberValue` directive is used to describe possible numeric values.
-
-**NOTE**: the decision to have a single directive for all numeric values (instead of `@floatValue` and `@intValue`) was made in order to avoid the edge cases resulting in undefined behavior. For example, a custom scalar with applied `@floatValue` and `@intValue` with incompatible constraints.
-
 Instance is valid if it is a numeric value according to the Serialization Format (e.g. JSON)
 
 #### Constraints
@@ -167,17 +160,6 @@ scalar AlphaNumeric @stringValue(
 *Examples of valid values*: `"foo1"`, `"Apollo13"`, `123test`
 
 *Examples of invalid values*: `3`, `"dash-dash"`, `admin@example.com`
-
-
-### @booleanValue
-
-`@booleanValue` directive is used to describe possible boolean values.
-Instance is valid if it is a boolean value according to the Serialization Format (e.g. JSON)
-
-#### Constraints
-
-##### equals
-Same as for [equals for @numberValue](#numbervalue)
 
 ## Wrapper Constraints Directives
 
@@ -314,23 +296,6 @@ age: Integer @numberValue(
 ```
 
 ## Appendix A: Some Examples
-
-```graphql
-scalar IntOrFalse @numberValue(multipleOf: 1) @booleanValue(equals: false)
-```
-
-*Examples of valid values*: `2`, `50`, `false`
-
-*Examples of invalid values*: `2.5`, `true`, `"string"`
-
-```graphql
-scalar FloatOrBoolean @numberValue @booleanValue
-```
-
-*Examples of valid values*: `2`, `50.3`, `false`, `true`
-
-*Examples of invalid values*: `"string"`, `[]`
-
 
 ```
 type Foo {
